@@ -7,6 +7,7 @@ using API.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using API.Interfaces;
 using FluentValidation;
+using API.Infrastructure.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,6 +54,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.AddGlobalErrorHandler();
 
 app.UseCors();
 

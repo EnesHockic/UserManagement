@@ -1,4 +1,5 @@
-﻿using API.Application.Permissions.DTO;
+﻿using API.Application.Common.Exceptions;
+using API.Application.Permissions.DTO;
 using API.Domain.Entities;
 using API.Interfaces;
 using AutoMapper;
@@ -26,6 +27,12 @@ namespace API.Application.Users.Commands.AssignPermission
         }
         public async Task<bool> Handle(AssignPermissionCommand request, CancellationToken cancellationToken)
         {
+            var existingUserPermission = _applicationDbContext.UserPermissions
+                .FirstOrDefault(x => x.UserId == request.UserId && x.PermissionId == request.PermissionId);
+            if (existingUserPermission != null)
+            {
+                throw new DuplicateException("This permission is already assigned to the user");
+            }
             var userPermission = new UserPermission()
             {
                 PermissionId = request.PermissionId,

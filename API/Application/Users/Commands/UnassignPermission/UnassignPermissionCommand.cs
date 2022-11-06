@@ -1,4 +1,5 @@
-﻿using API.Application.Users.DTO;
+﻿using API.Application.Common.Exceptions;
+using API.Application.Users.DTO;
 using API.Interfaces;
 using API.Interfaces.Persistence;
 using AutoMapper;
@@ -28,11 +29,10 @@ namespace API.Application.Users.Commands.UnassignPermission
         {
             var userPermission = _applicationDbContext.UserPermissions
                 .FirstOrDefault(x => x.UserId == request.UserId && x.PermissionId == request.PermissionId);
-            //if (user == null)
-            //{
-            //    //Throw exception
-            //    throw new Exception("User doesn't exist!");
-            //}
+            if (userPermission == null)
+            {
+                throw new NotFoundException("The user doesn't have this permission!");
+            }
 
             _applicationDbContext.UserPermissions.Remove(userPermission);
 

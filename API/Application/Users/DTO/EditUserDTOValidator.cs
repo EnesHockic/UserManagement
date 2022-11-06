@@ -10,6 +10,15 @@ namespace API.Application.Users.DTO
             RuleFor(x => x.FirstName)
                 .NotEmpty()
                 .WithMessage("First Name is required!");
+            RuleFor(x => x.FirstName)
+                .NotEmpty()
+                .WithMessage("Last Name is required!");
+            RuleFor(x => x.FirstName)
+                .NotEmpty()
+                .WithMessage("Email is required!");
+            RuleFor(x => x.FirstName)
+                .NotEmpty()
+                .WithMessage("Status is required!");
         }
     }
 }

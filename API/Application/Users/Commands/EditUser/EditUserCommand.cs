@@ -1,4 +1,5 @@
-﻿using API.Application.Users.DTO;
+﻿using API.Application.Common.Exceptions;
+using API.Application.Users.DTO;
 using API.Interfaces.Persistence;
 using AutoMapper;
 using MediatR;
@@ -35,16 +36,16 @@ namespace API.Application.Users.Commands.EditUser
         public async Task<GetUserDTO> Handle(EditUserCommand request, CancellationToken cancellationToken)
         {
             var user = _userRepository.GetUserById(request.Id);
-            //if (user == null)
-            //{
-            //    //Throw exception
-            //    throw new Exception("User doesn't exist!");
-            //}
+            if (user == null)
+            {
+                throw new NotFoundException("User doesn't exist!");
+            }
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
             user.Email = request.Email;
             user.Status = request.Status;
-            _userRepository.SaveChanges(cancellationToken);
+
+            await _userRepository.SaveChanges(cancellationToken);
 
             return _mapper.Map<GetUserDTO>(user);
         }

@@ -35,7 +35,11 @@ namespace API.Controllers
         [HttpPut("{userId}")]
         public async Task<IActionResult> UpdateUser(int userId, [FromBody] EditUserDTO userDTO)
         {
-            //Maybe some validation if Ids are same
+            if(userId == 0)
+            {
+                return BadRequest("Please provide a valid user");
+            }
+
             var updatedUser = await Mediator.Send(new EditUserCommand(userId, userDTO.FirstName,
                 userDTO.LastName, userDTO.Email, userDTO.Status)).ConfigureAwait(false);
             return Ok(updatedUser);

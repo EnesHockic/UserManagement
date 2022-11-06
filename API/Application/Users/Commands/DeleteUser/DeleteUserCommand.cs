@@ -1,4 +1,5 @@
-﻿using API.Interfaces;
+﻿using API.Application.Common.Exceptions;
+using API.Interfaces;
 using AutoMapper;
 using MediatR;
 
@@ -28,8 +29,7 @@ namespace API.Application.Users.Commands.DeleteUser
             var user = _applicationDbContext.Users.Find(request.UserId);
             if(user == null)
             {
-                //throw exception
-                return false;
+                throw new NotFoundException("User doesn't exist");
             }
             _applicationDbContext.Users.Remove(user);
             var result = await _applicationDbContext.SaveChangesAsync(cancellationToken);
