@@ -2,7 +2,6 @@
 using API.Application.Users.DTO;
 using API.Domain.Entities;
 using API.Interfaces;
-using API.Interfaces.Persistence;
 using AutoMapper;
 using MediatR;
 

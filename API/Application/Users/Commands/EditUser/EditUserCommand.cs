@@ -1,6 +1,6 @@
 ﻿using API.Application.Common.Exceptions;
 using API.Application.Users.DTO;
-using API.Interfaces.Persistence;
+using API.Interfaces;
 using AutoMapper;
 using MediatR;
 
@@ -25,17 +25,17 @@ namespace API.Application.Users.Commands.EditUser
     }
     public class EditUserCommandHandler : IRequestHandler<EditUserCommand, GetUserDTO>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
 
-        public EditUserCommandHandler(IUserRepository userRepository, IMapper mapper)
+        public EditUserCommandHandler(IApplicationDbContext applicationDbContext, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _applicationDbContext = applicationDbContext;
             _mapper = mapper;
         }
         public async Task<GetUserDTO> Handle(EditUserCommand request, CancellationToken cancellationToken)
         {
-            var user = _userRepository.GetUserById(request.Id);
+            var user = _applicationDbContext.Users.Find(request.Id);
             if (user == null)
             {
                 throw new NotFoundException("User doesn't exist!");
@@ -45,7 +45,7 @@ namespace API.Application.Users.Commands.EditUser
             user.Email = request.Email;
             user.Status = request.Status;
 
-            await _userRepository.SaveChanges(cancellationToken);
+            await _applicationDbContext.SaveChangesAsync(cancellationToken);
 
             return _mapper.Map<GetUserDTO>(user);
         }

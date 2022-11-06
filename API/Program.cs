@@ -1,5 +1,3 @@
-using API.Infrastructure.Persistence;
-using API.Interfaces.Persistence;
 using FluentValidation.AspNetCore;
 using System.Reflection;
 using MediatR;
@@ -29,9 +27,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {

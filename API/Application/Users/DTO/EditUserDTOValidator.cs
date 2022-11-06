@@ -1,5 +1,4 @@
-﻿using API.Interfaces.Persistence;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace API.Application.Users.DTO
 {
@@ -10,13 +9,13 @@ namespace API.Application.Users.DTO
             RuleFor(x => x.FirstName)
                 .NotEmpty()
                 .WithMessage("First Name is required!");
-            RuleFor(x => x.FirstName)
+            RuleFor(x => x.LastName)
                 .NotEmpty()
                 .WithMessage("Last Name is required!");
-            RuleFor(x => x.FirstName)
+            RuleFor(x => x.Email)
                 .NotEmpty()
                 .WithMessage("Email is required!");
-            RuleFor(x => x.FirstName)
+            RuleFor(x => x.Status)
                 .NotEmpty()
                 .WithMessage("Status is required!");
         }

@@ -1,6 +1,6 @@
 ﻿using API.Application.Users.DTO;
 using API.Domain.Entities;
-using API.Interfaces.Persistence;
+using API.Interfaces;
 using AutoMapper;
 using MediatR;
 
@@ -28,12 +28,12 @@ namespace API.Application.Users.Commands.AddUser
     }
     public class AddUserCommandHandler : IRequestHandler<AddUserCommand, GetUserDTO>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
 
-        public AddUserCommandHandler(IUserRepository userRepository, IMapper mapper)
+        public AddUserCommandHandler(IApplicationDbContext applicationDbContext, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _applicationDbContext = applicationDbContext;
             _mapper = mapper;
         }
         public async Task<GetUserDTO> Handle(AddUserCommand request, CancellationToken cancellationToken)
@@ -47,8 +47,8 @@ namespace API.Application.Users.Commands.AddUser
                 Username = request.Username,
                 Password = request.Password
             };
-            _userRepository.Add(newUser);
-            await _userRepository.SaveChanges(cancellationToken);
+            _applicationDbContext.Users.Add(newUser);
+            await _applicationDbContext.SaveChangesAsync(cancellationToken);
             return _mapper.Map<GetUserDTO>(newUser);
         }
     }

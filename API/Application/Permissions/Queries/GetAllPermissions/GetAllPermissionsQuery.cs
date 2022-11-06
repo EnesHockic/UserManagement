@@ -1,6 +1,5 @@
 ﻿using API.Application.Permissions.DTO;
 using API.Interfaces;
-using API.Interfaces.Persistence;
 using AutoMapper;
 using MediatR;
 

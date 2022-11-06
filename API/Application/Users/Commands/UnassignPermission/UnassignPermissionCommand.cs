@@ -1,7 +1,6 @@
 ﻿using API.Application.Common.Exceptions;
 using API.Application.Users.DTO;
 using API.Interfaces;
-using API.Interfaces.Persistence;
 using AutoMapper;
 using MediatR;
 

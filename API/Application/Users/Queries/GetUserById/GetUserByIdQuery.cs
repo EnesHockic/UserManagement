@@ -1,5 +1,6 @@
-﻿using API.Application.Users.DTO;
-using API.Interfaces.Persistence;
+﻿using API.Application.Common.Exceptions;
+using API.Application.Users.DTO;
+using API.Interfaces;
 using AutoMapper;
 using MediatR;
 
@@ -15,17 +16,20 @@ namespace API.Application.Users.Queries.GetUserById
     }
     public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, GetUserDTO>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IApplicationDbContext _applicationDbContext;
         private readonly IMapper _mapper;
-        public GetUserByIdQueryHandler(IUserRepository userRepository, IMapper mapper)
+        public GetUserByIdQueryHandler(IApplicationDbContext applicationDbContext, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _applicationDbContext = applicationDbContext;
             _mapper = mapper;
         }
         public async Task<GetUserDTO> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
         {
-            var user = _userRepository.GetUserById(request.UserId);
-            //Throw exception
+            var user = _applicationDbContext.Users.Find(request.UserId);
+            if (user == null)
+            {
+                throw new NotFoundException("User was not found!");
+            }
             return _mapper.Map<GetUserDTO>(user);
         }
     }

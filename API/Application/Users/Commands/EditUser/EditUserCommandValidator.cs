@@ -1,14 +1,14 @@
-﻿using API.Interfaces.Persistence;
+﻿using API.Interfaces;
 using FluentValidation;
 
 namespace API.Application.Users.Commands.EditUser
 {
     public class EditUserCommandValidator : AbstractValidator<EditUserCommand>
     {
-        private readonly IUserRepository _userRepository;
-        public EditUserCommandValidator(IUserRepository userRepository)
+        private readonly IApplicationDbContext _applicationDbContext;
+        public EditUserCommandValidator(IApplicationDbContext applicationDbContext)
         {
-            _userRepository = userRepository;
+            _applicationDbContext = applicationDbContext;
             RuleFor(x => x.Id)
                 .Must(UserExists)
                 .WithMessage("User does not exist!");
@@ -33,7 +33,7 @@ namespace API.Application.Users.Commands.EditUser
         }
         public bool UserExists(int userId)
         {
-            var user = _userRepository.GetUserById(userId);
+            var user = _applicationDbContext.Users.Find(userId);
 
             return user != null;
         }
