@@ -21,7 +21,7 @@
             PageSize = pageSize;
         }
         public bool HasNextPage { get => PageIndex < TotalPages; }
-        public bool HasPreviousPage { get => PageIndex > 0; }
+        public bool HasPreviousPage { get => PageIndex > 1; }
 
         public static PaginatedList<T> Create(List<T> source, int pageIndex, int pageSize)
         {

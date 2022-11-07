@@ -27,8 +27,7 @@ namespace API.Application.Users.Commands.EditUser
 
             RuleFor(x => x.Email)
                 .EmailAddress()
-                .WithMessage("Please provide a valid email address!")
-                .When(x => !string.IsNullOrEmpty(x.Email));
+                .WithMessage("Please provide a valid email address!");
 
         }
         public bool UserExists(int userId)

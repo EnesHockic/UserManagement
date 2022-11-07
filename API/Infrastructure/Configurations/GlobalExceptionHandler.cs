@@ -1,4 +1,7 @@
 ﻿using API.Application.Common.Exceptions;
+using FluentValidation.AspNetCore;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Net;
 using System.Text.Json;
 
@@ -20,7 +23,7 @@ namespace API.Infrastructure.Configurations
             }
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex);
+              await HandleExceptionAsync(context, ex);
             }
         }
         private static Task HandleExceptionAsync(HttpContext context, Exception ex)
@@ -28,9 +31,19 @@ namespace API.Infrastructure.Configurations
             HttpStatusCode statusCode;
             var stackTrace = string.Empty;
             string message = "";
+            IDictionary<string, string> errors = new Dictionary<string, string>();
+            List<ValidationFailure> errorList = new List<ValidationFailure>();
             var exceptionType = ex.GetType();
-
-            if(exceptionType == typeof(NotFoundException))
+            
+            if(exceptionType == typeof(FluentValidation.ValidationException))
+            {
+                var exception = ex as FluentValidation.ValidationException;
+                errorList = exception.Errors.ToList();
+                message = "Validation error";
+                statusCode = HttpStatusCode.BadRequest;
+                stackTrace = ex.StackTrace;
+            }
+            else if(exceptionType == typeof(NotFoundException))
             {
                 message = ex.Message;
                 statusCode = HttpStatusCode.NotFound;
@@ -54,7 +67,7 @@ namespace API.Infrastructure.Configurations
                 stackTrace = ex.StackTrace;
             }
 
-            var exceptionRes = JsonSerializer.Serialize(new { error = message, stackTrace = stackTrace });
+            var exceptionRes = JsonSerializer.Serialize(new { message = message, errors = errorList, stackTrace = stackTrace });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int) statusCode;
 

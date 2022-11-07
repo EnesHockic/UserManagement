@@ -29,6 +29,11 @@ namespace API.Controllers
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUser(int userId)
         {
+            if(userId == 0)
+            {
+                return BadRequest("Please provide a valid user!");
+            }
+
             var users = await Mediator.Send(new GetUserByIdQuery(userId));
             return Ok(users);
         }
@@ -37,7 +42,7 @@ namespace API.Controllers
         {
             if(userId == 0)
             {
-                return BadRequest("Please provide a valid user");
+                return BadRequest("Please provide a valid user!");
             }
 
             var updatedUser = await Mediator.Send(new EditUserCommand(userId, userDTO.FirstName,

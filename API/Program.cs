@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Interfaces;
 using FluentValidation;
 using API.Infrastructure.Configurations;
+using API.Application.Behaviours;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.AddControllers()
                 //     options.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
                 // });
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 //builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
